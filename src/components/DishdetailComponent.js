@@ -4,8 +4,14 @@ import {Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle} from 'reac
 class Dishdetail extends Component {
     constructor(props) {
         super(props);
-
         this.state = {}
+    }
+
+    formatDate(date) {
+        const option = { year: 'numeric', month: 'short', day: 'numeric' };
+        const date1 = new Date(date)
+        const newdate = date1.toLocaleDateString("en-US", option)
+        return newdate;
     }
 
     renderComments(commentList) {
@@ -27,9 +33,8 @@ class Dishdetail extends Component {
     }
 
     render() {
-
         const commentList = this.props.parentData.comments.map((comm) => {
-            const commInfo = '-- ' + comm.author + ', ' + comm.date;
+            const commInfo = '-- ' + comm.author + ', ' + this.formatDate(comm.date);
             return(
                 <div key={comm.id}>
                     <p className="m-3"> {comm.comment} </p>
