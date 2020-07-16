@@ -1,64 +1,72 @@
 import React, {Component} from 'react';
-import {Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle} from 'reactstrap';
+import {Card, CardImg, CardText, CardBody, CardTitle} from 'reactstrap';
+import "bootstrap/dist/css/bootstrap.min.css"
 
 class Dishdetail extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {}
-    }
 
     formatDate(date) {
-        const option = { year: 'numeric', month: 'short', day: 'numeric' };
-        const date1 = new Date(date)
-        const newdate = date1.toLocaleDateString("en-US", option)
-        return newdate;
+        // const option = { year: 'numeric', month: 'short', day: 'numeric' };
+        // const date1 = new Date(date)
+        // const newdate = date1.toLocaleDateString("en-US", option)
+        // return newdate;
+
+        return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(date)))
     }
 
-    renderComments(commentList) {
-        if (commentList!=null) {
-            return(
-                <div>
-                    <h4 className="font-weight-bold m-2 mt-3 mb-3"> Comments </h4>
-                    <ul className="list-unstyled ">
-                        {commentList}
-                    </ul>
-                </div>
+    renderDish = (dish) => {
+        if (dish != null) {
+            return (
+                <React.Fragment>
+                    <div className="row">
+                    <div className="col-12 col-md-5 m-1">
+                        <Card>
+                            <CardImg width="100%" src={dish.image} alt={dish.name} />
+                            <CardBody>
+                                <CardTitle>{dish.name}</CardTitle>
+                                <CardText>{dish.description}</CardText>
+                            </CardBody>
+                        </Card>
+                    </div>
+                    <div className="col-12 col-md-5 m-1" >
+                        <h4 className="mt-3 mb-3">Comments</h4>
+                        {this.renderComments(dish.comments)}
+                    </div>
+                    </div>
+                </React.Fragment>
             )
-        } 
+        }
         else {
-            return(
-                <div></div>
+            return (<div></div>)
+        }
+    }
+
+    renderComments = (comments) => {
+        if (comments != null) {
+            const com = comments.map(co => {
+                return (
+                    <React.Fragment>
+                        <li>{co.comment}</li><br />
+                        <li>-- {co.author}, {this.formatDate(co.date)}</li><br />
+                    </React.Fragment>
+                )
+            }
+            );
+            return (
+                <ul className="list-unstyled">
+                    {com}
+                </ul>
             )
+        }
+        else {
+            return (<div></div>)
         }
     }
 
     render() {
-        const commentList = this.props.parentData.comments.map((comm) => {
-            const commInfo = '-- ' + comm.author + ', ' + this.formatDate(comm.date);
-            return(
-                <div key={comm.id}>
-                    <p className="m-3"> {comm.comment} </p>
-                    <p className="m-3"> {commInfo} </p>
-                </div>
-            )
-        });
-
-        return(
+        const { dish } = this.props;
+        return (
             <div className="container">
-                <div className="row">
-                    <div className="col-12 col-md-5 m-1">
-                        <Card>
-                        <CardImg width="100%" src={this.props.parentData.image} alt={this.props.parentData.name}/>
-                        <CardBody>
-                            <CardTitle>{this.props.parentData.name}</CardTitle>
-                            <CardText>{this.props.parentData.description}</CardText>
-                        </CardBody>
-                        </Card> 
-                    </div>
-                    <div className="col-12 col-md-5 m-1">
-                        {this.renderComments(commentList)} 
-                    </div>
-                </div>
+                {this.renderDish(dish)}
             </div>
         );
     }
