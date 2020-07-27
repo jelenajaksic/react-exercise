@@ -8,7 +8,7 @@ import { baseUrl } from '../shared/baseUrl';
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
 const minLength = (len) => (val) => val && (val.length >= len);
 
-    function RenderComments({comments,addComment, dishId})
+    function RenderComments({comments,postComment, dishId})
     {
         if(comments==null)
         {
@@ -29,7 +29,7 @@ const minLength = (len) => (val) => val && (val.length >= len);
                 <div className="col-12 col-md-5 m-1">
                     <h4> Comments </h4>
                     <ul className='list-unstyled'> {comm} </ul>
-                    <CommentForm dishId={dishId} addComment={addComment} />
+                    <CommentForm dishId={dishId} postComment={postComment} />
                 </div>
             )
         }
@@ -89,7 +89,7 @@ const minLength = (len) => (val) => val && (val.length >= len);
                     </div>
                 <div className="row">
                 <RenderDish dish={props.dish} />
-                <RenderComments comments={props.comments} addComment={props.addComment}
+                <RenderComments comments={props.comments} postComment={props.postComment}
                         dishId={props.dish.id} />
                 </div>
             </div>
@@ -117,7 +117,7 @@ export class CommentForm extends Component {
 
     handleSubmit(values) {
         this.toggleModal();
-        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
+        this.props.postComment(this.props.dishId, values.rating, values.author, values.comment);
     }
 
     render() {
